@@ -1,0 +1,20 @@
+{
+  "name": "dev-tender",
+  "version": "1.0.0",
+  "description": "Backend Tender project for developers",
+  "keywords": [
+    "node.js",
+    "javascript"
+  ],
+  "license": "ISC",
+  "author": "Khushal Ahire",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev":"nodemon src/app.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
