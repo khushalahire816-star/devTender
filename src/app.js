@@ -6,17 +6,17 @@ app.use("/test", (req, res) => {
   res.send("Welcome to first server of dev tender...");
 })
 
-app.use("/profile", (req, res) => {
-  res.send("Hello Guys, I am Khushal Ahire..");
+app.get("/profile", (req, res) => {
+  res.send("It is GET router...");
 })
 
-app.use("/dashboard", (req, res) => {
-  res.send("It is dashboard page")
+app.post("/dashboard", (req, res) => {
+  res.send("It is POST router...");
 })
 
-app.use("/", (req, res) => {
-  res.send("This page is allow to everyone..");
-});
+app.delete("/del", (req, res) => {
+  res.send("It is DELETE router..");
+})
 
 app.listen(3000, () => {
   console.log("My server is running on 3000 port")
