@@ -2,7 +2,8 @@ const express = require("express");
 
 const app = express();
 
-app.use("/ab+cd", (req, res) => {
+app.use("/user/:username/:password", (req, res) => {
+  console.log(req.params);
   res.send("Welcome to first server of dev tender...");
 })
 
