@@ -2,22 +2,30 @@ const express = require("express");
 
 const app = express();
 
-app.use("/user/:username/:password", (req, res) => {
-  console.log(req.params);
-  res.send("Welcome to first server of dev tender...");
-})
-
-// app.get("/profile", (req, res) => {
-//   res.send("It is GET router...");
-// })
-
-// app.post("/dashboard", (req, res) => {
-//   res.send("It is POST router...");
-// })
-
-// app.delete("/del", (req, res) => {
-//   res.send("It is DELETE router..");
-// })
+app.use(
+  "/user",
+  (req, res, next) => {
+    console.log("1st Response");
+    next();
+  },
+  (req, res, next) => {
+    console.log("2nd Response.");
+    next()
+  },
+  (req, res, next) => {
+    console.log("3rd Response");
+    //res.send("This is 3rd Route Handler.")
+    next();
+  },
+  (req, res, next) => {
+    console.log("4th Response");
+    next();
+  },
+  (req, res, next) => {
+    console.log("5th Response");
+    res.send("This is 5th Route Randler.")
+  },
+);
 
 app.listen(3000, () => {
   console.log("My server is running on 3000 port")
