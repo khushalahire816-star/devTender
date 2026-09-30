@@ -2,20 +2,39 @@ const express = require("express");
 
 const app = express();
 
-const {adminAuth, userAuth} = require("./middelwares/auth")
-
-app.use("/admin", adminAuth)
-app.get("/admin/getAllData", (req, res) => {
-  res.send("All data of admin..");
+app.get("/admin", (req, res) => {
+  try {
+    throw new Error("efdfs");
+    res.send("This is try catch block")
+  }catch (err) {
+    res.send("This is try catch error")
+  }  
 })
-app.delete("/admin/deleteAll", (req, res) => {
-  res.send("Deleted all data..");
+
+
+app.get("/user", (req, res) => {
+  throw new Error("dfsdsfe");
+  res.send("This is exception handling code.")
 })
 
-//app.use("/user", userAuth)
-app.get("/user",userAuth, (req, res) => {
-  res.send("This is user request handler.");
-});
+app.use("/", (err, req, res, next) => {
+  res.status(500).send("Something went to wrong.")
+})
+
+// const {adminAuth, userAuth} = require("./middelwares/auth")
+
+// app.use("/admin", adminAuth)
+// app.get("/admin/getAllData", (req, res) => {
+//   res.send("All data of admin..");
+// })
+// app.delete("/admin/deleteAll", (req, res) => {
+//   res.send("Deleted all data..");
+// })
+
+// //app.use("/user", userAuth)
+// app.get("/user",userAuth, (req, res) => {
+//   res.send("This is user request handler.");
+// });
 
 
 
@@ -38,6 +57,8 @@ app.get("/user",userAuth, (req, res) => {
 // })
 
 
+
+
 //Independent Route Handlers
 // app.use("/user", (req, res, next) => {
 //   // res.send("This is Independent Route Handler.");
@@ -51,6 +72,8 @@ app.get("/user",userAuth, (req, res) => {
 //   (req, res) => {
 //     res.send("This is 2nd route handler.");
 // })
+
+
 
 //Multiple route Handlers
 // app.use(
