@@ -1,25 +1,41 @@
 const express = require("express");
+const dns = require("dns");
+dns.setServers(["1.1.1.1", "8.8.8.8"])
+
+const connectDB = require("./config/database");
 
 const app = express();
 
-app.get("/admin", (req, res) => {
-  try {
-    throw new Error("efdfs");
-    res.send("This is try catch block")
-  }catch (err) {
-    res.send("This is try catch error")
-  }  
-})
+connectDB()
+  .then(() => {
+    console.log("Database connected sucessfully..");
+    app.listen(3000, () => {
+      console.log("My server is running on 3000 port");
+    });
+  })
+  .catch((err) => {
+    console.error("Database cannot be connected..");
+    console.error(err);
+  });
+
+// app.get("/admin", (req, res) => {
+//   try {
+//     throw new Error("efdfs");
+//     res.send("This is try catch block")
+//   }catch (err) {
+//     res.send("This is try catch error")
+//   }  
+// })
 
 
-app.get("/user", (req, res) => {
-  throw new Error("dfsdsfe");
-  res.send("This is exception handling code.")
-})
+// app.get("/user", (req, res) => {
+//   throw new Error("dfsdsfe");
+//   res.send("This is exception handling code.")
+// })
 
-app.use("/", (err, req, res, next) => {
-  res.status(500).send("Something went to wrong.")
-})
+// app.use("/", (err, req, res, next) => {
+//   res.status(500).send("Something went to wrong.")
+// })
 
 // const {adminAuth, userAuth} = require("./middelwares/auth")
 
@@ -101,6 +117,3 @@ app.use("/", (err, req, res, next) => {
 //   },
 // );
 
-app.listen(3000, () => {
-  console.log("My server is running on 3000 port")
-})
