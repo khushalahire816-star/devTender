@@ -4,14 +4,13 @@ dns.setServers(["1.1.1.1", "8.8.8.8"])
 const connectDB = require("./config/database");
 const app = express();
 const User = require("./models/user");
+const { model } = require("mongoose");
 
+app.use(express.json());
+
+//post data to database
 app.post("/signup", async (req, res) => {
-  const user = new User({
-    firstName: "Om",
-    lasrName: "Wagh",
-    email: "om@waghgmail.com",
-    password: "om",
-  });
+  const user = new User(req.body);
 
   try {
     await user.save();
@@ -19,11 +18,71 @@ app.post("/signup", async (req, res) => {
   } catch (err) {
     res.status(400).send("Something went wrong: " + err.message);
   }
-
-  
-
 })
 
+//get data from database
+app.get("/user", async (req, res) => {
+  const userEmail = req.body.email;
+
+  const user = await User.find({ email: userEmail });
+
+  try {
+    if (user.length === 0) {
+      res.send("There is no user with this email");
+    } else {
+      res.send(user);
+    }
+  }
+  catch (err) {
+    res.status(400).send("Something went wrong.");
+  }
+})
+
+app.get("/feed", async (req, res) => {
+  const allData = await User.find({});
+  try {
+    res.send(allData);
+  } catch (err) {
+    res.status(400).send("Something went wrong");
+  }
+})
+
+app.get("/findone", async (req, res) => {
+  const useremail = req.body.email;
+  const user = await User.findOne({ email: useremail })
+  
+  try {
+     if (!user) {
+      res.status(400).send("User not found");
+    } else {
+        res.send(user);
+    }
+  } catch (err) {
+    res.status(400).send("Something went wrong..");
+  }
+})
+
+//delete data from database
+app.delete("/feed", async (req, res) => {
+  const userId = req.body.userId;
+
+  const user = await User.findByIdAndDelete({ _id: userId});
+
+  res.send("Deleted data successfully.");
+})
+
+//update user data from database
+app.patch("/user", async (req, res) => {
+  const userId = req.body.userId;
+  const data = req.body;
+
+  const user = await User.findByIdAndUpdate({ _id: userId }, data, {returnDocument : "after"});
+  try {
+    res.send("Update user data successfully..");
+  } catch (err) {
+    res.status(400).send("something went wrong.");
+  }
+})
 connectDB()
   .then(() => {
     console.log("Database connected sucessfully..");
