@@ -1,10 +1,28 @@
 const express = require("express");
 const dns = require("dns");
 dns.setServers(["1.1.1.1", "8.8.8.8"])
-
 const connectDB = require("./config/database");
-
 const app = express();
+const User = require("./models/user");
+
+app.post("/signup", async (req, res) => {
+  const user = new User({
+    firstName: "Om",
+    lasrName: "Wagh",
+    email: "om@waghgmail.com",
+    password: "om",
+  });
+
+  try {
+    await user.save();
+    res.send("Database stored successfully..");
+  } catch (err) {
+    res.status(400).send("Something went wrong: " + err.message);
+  }
+
+  
+
+})
 
 connectDB()
   .then(() => {
