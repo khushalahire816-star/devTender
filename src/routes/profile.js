@@ -1,9 +1,10 @@
 const express = require("express");
-const {userAuth } = require("../middelwares/auth");
+const { userAuth } = require("../middelwares/auth");
+const { validateInputUserData } = require("../utils/validates");
 
 const profileRouter = express.Router();
 
-profileRouter.get("/profile", userAuth, async (req, res) => {
+profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const user = req.user;
     
@@ -12,6 +13,29 @@ profileRouter.get("/profile", userAuth, async (req, res) => {
     
   } catch (err) {
     res.status(400).send("Error" + err.message);
+  }
+})
+
+profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
+  try {
+    if (!validateInputUserData(req)) {
+      throw new Error("These fields are not allowed to edit profile.");
+    }
+
+    const loggedUser = req.user;
+
+    Object.keys(req.body).forEach(key => (loggedUser[key] = req.body[key]));
+
+    await loggedUser.save();
+
+    res.json({
+      message: `${loggedUser.firstName}, your profile edited successfully..`,
+      data : loggedUser
+    });
+
+    
+  } catch (err) {
+    res.status(400).send("Something went to wrong..");
   }
 })
 
