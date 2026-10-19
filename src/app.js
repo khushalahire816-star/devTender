@@ -10,9 +10,13 @@ const { error } = require("console");
 const { validateSignupData } = require("./utils/validates");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
-const {userAuth } = require("./middelwares/auth"); 
+const {userAuth } = require("./middelwares/auth");
+const cors = require("cors");
 
-
+app.use(cors({
+  origin : "http://localhost:5173",
+  credentials : true
+}));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -132,14 +136,13 @@ app.post("/login", async (req, res) => {
       throw new Error("Invalid Input");
     }
 
-    const correctPassword = await bcrypt.compare(password, user.password);
+    const correctPassword = await user.validatePassword(password);
     if (correctPassword) {
 
-      const token = await jwt.sign({ _id: user._id }, "Dev@Tinder@123", {expiresIn : "1d"});
-      console.log(token);
+      const token = await user.getJWT();
 
       res.cookie("token", token, {expires : new Date(Date.now() + 1 * 3600000)});
-      res.send("Login successfully..");
+      res.send(user);
 
     } else {
       throw new Error("Invalide Input");
