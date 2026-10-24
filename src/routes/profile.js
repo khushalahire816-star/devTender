@@ -1,6 +1,7 @@
 const express = require("express");
 const { userAuth } = require("../middelwares/auth");
 const { validateInputUserData } = require("../utils/validates");
+const User = require("../models/user");
 
 const profileRouter = express.Router();
 
@@ -35,7 +36,16 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
 
     
   } catch (err) {
-    res.status(400).send("Something went to wrong..");
+    res.status(400).send(err.message);
+  }
+})
+
+profileRouter.get("/feed", async (req, res) => {
+  const allData = await User.find({});
+  try {
+    res.send(allData);
+  } catch (err) {
+    res.status(400).send("Something went wrong");
   }
 })
 
